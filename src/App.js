@@ -1,43 +1,29 @@
-import { BrowserRouter as Router } from "react-router-dom";
-import AppHeader from "./component/main";
-import Footer from "./component/footer";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import AppHeader from "./component/header";
+import AppFooter from "./component/footer";
+import Topbar from "./component/topbar";
+import DashBoard from "./pages/dashboard";
+import Staking from "./pages/staking";
 
 import { motion } from "framer-motion";
 
 import "./App.css";
-import { useState } from "react";
 function App() {
-  const [preloadState, setPreloadState] = useState(true);
-
-  setInterval(() => {
-    setPreloadState(false);
-  }, 5000);
-
   return (
     <motion.section
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      transition={{ ease: "easeInOut", duration: 0.5, delay: 0.5 }}>
-      <div className="metaverse_fn_main">
-        {preloadState && (
-          <div className="metaverse_fn_preloader">
-            <div className="multi-spinner-container">
-              <div className="multi-spinner">
-                <div className="multi-spinner">
-                  <div className="multi-spinner">
-                    <div className="multi-spinner">
-                      <div className="multi-spinner">
-                        <div className="multi-spinner"></div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-
-        <Router></Router>
+      transition={{ ease: "easeInOut", duration: 0.5, delay: 0.1 }}>
+      <div className="main-section">
+        <Router>
+          <AppHeader />
+          <Topbar />
+          <Routes>
+            <Route path="/" element={<DashBoard />} />
+            <Route path="/staking" element={<Staking />} />
+          </Routes>
+          <AppFooter />
+        </Router>
       </div>
     </motion.section>
   );
