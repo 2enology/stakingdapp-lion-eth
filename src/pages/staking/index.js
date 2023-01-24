@@ -70,7 +70,7 @@ export default function Staking() {
               </div>
             </div>
           ) : (
-            <div className="gap-3 grid grid-cols-1 lg:gap-7 lg:grid-cols-4 md:grid-cols-3 overflow-y-auto p-10 sm:grid-cols-3 staking-grid xl:gap-10 xl:grid-cols-5">
+            <div className="gap-3 grid grid-cols-1 lg:gap-7 lg:grid-cols-4 md:grid-cols-2 overflow-y-auto p-10 sm:grid-cols-2 staking-grid xl:gap-10 xl:grid-cols-5">
               <NftCard />
               <NftCard />
               <NftCard />

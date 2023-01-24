@@ -43,6 +43,7 @@ export default function Header() {
       }
     };
     connectWalletOnPageLoad();
+    return;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -51,10 +52,10 @@ export default function Header() {
       <header
         id="header"
         className="flex justify-between lg:px-10 md:px-20 mt-5 px-5 sm:px-10 w-full xl:px-40 z-50">
-        <div className="flex logo">
+        <a className="flex logo" href="/">
           <img src={logoIMG} alt="logoIMG" className="w-14" />
           <h1 className="hidden mt-3 sm:block text-white text-xl">Lion NFTs</h1>
-        </div>
+        </a>
         {!account ? (
           <button
             variant="hovered"
