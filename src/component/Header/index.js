@@ -50,24 +50,22 @@ export default function Header() {
     <>
       <header
         id="header"
-        className="flex justify-between lg:px-10 md:px-20 mt-3 px-5 sm:px-10 w-full xl:px-60 z-50">
+        className="flex justify-between lg:px-10 md:px-20 mt-5 px-5 sm:px-10 w-full xl:px-40 z-50">
         <div className="flex logo">
           <img src={logoIMG} alt="logoIMG" className="w-14" />
-          <h1 className="hidden sm:block mt-3 text-2xl text-white">
-            Lion NFTs
-          </h1>
+          <h1 className="hidden mt-3 sm:block text-white text-xl">Lion NFTs</h1>
         </div>
         {!account ? (
           <button
             variant="hovered"
-            className="bg-gray-100 flex font pt-4 px-3 rounded-full text-xl"
+            className="bg-gray-100 flex font pt-4 px-3 rounded-full text-md"
             onClick={() => connect()}>
             <FaWallet className="mr-2 mt-1" /> Connect Wallet
           </button>
         ) : (
           <button
             variant="hovered"
-            className="bg-gray-100 flex font pt-4 px-4 rounded-full text-xl"
+            className="bg-gray-100 flex font pt-4 px-4 rounded-full text-md"
             onClick={() => disconnect()}>
             <FaWallet className="mr-2 mt-1" />
             {account.toString().slice(0, 4)} .... {account.toString().slice(-4)}

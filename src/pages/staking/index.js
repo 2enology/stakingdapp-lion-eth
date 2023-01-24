@@ -1,7 +1,7 @@
 import NftCard from "./nftcard";
 export default function Staking() {
   return (
-    <div className="flex justify-between lg:px-10 md:px-20 mt-10 px-5 sm:px-10 w-full xl:px-40 z-50">
+    <div className="2xl:px-32 flex justify-between lg:px-10 mb-10 md:px-20 mt-10 px-5 sm:px-10 w-full z-50">
       <div className="border-2 justify-between staking_content w-full">
         <div className="border-b-2 border-indigo-900 border-opacity-20 justify-between lg:flex w-full">
           <div className="flex lg:w-auto w-full">
@@ -49,7 +49,8 @@ export default function Staking() {
             </div>{" "}
           </div>
         </div>
-        <div className="gap-3 grid grid-cols-1 lg:gap-7 lg:grid-cols-4 md:grid-cols-3 p-10 sm:grid-cols-3 xl:gap-10 xl:grid-cols-5">
+        <div className="gap-3 grid grid-cols-1 lg:gap-7 lg:grid-cols-4 md:grid-cols-3 overflow-y-auto p-10 sm:grid-cols-3 staking-grid xl:gap-10 xl:grid-cols-5">
+          <NftCard />
           <NftCard />
           <NftCard />
           <NftCard />

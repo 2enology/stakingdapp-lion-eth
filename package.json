@@ -28,6 +28,7 @@
     "react-scripts": "4.0.3",
     "react-slick": "^0.28.1",
     "react-spinners-kit": "^1.9.1",
+    "react-spring-3d-carousel": "1.2.0",
     "slick-carousel": "^1.8.1",
     "styled-components": "^5.3.6",
     "tailwindcss": "npm:@tailwindcss/postcss7-compat@^2.0.2",

@@ -1,7 +1,9 @@
-import { BrowserRouter as Router } from "react-router-dom";
-import AppHeader from "./component/Header";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import AppHeader from "./component/header";
+import AppFooter from "./component/footer";
 import Topbar from "./component/topbar";
-import Staking from "./component/staking";
+import DashBoard from "./pages/dashboard";
+import Staking from "./pages/staking";
 
 import { motion } from "framer-motion";
 
@@ -16,7 +18,11 @@ function App() {
         <Router>
           <AppHeader />
           <Topbar />
-          <Staking />
+          <Routes>
+            <Route path="/" element={<DashBoard />} />
+            <Route path="/staking" element={<Staking />} />
+          </Routes>
+          <AppFooter />
         </Router>
       </div>
     </motion.section>
