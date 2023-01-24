@@ -340,3 +340,26 @@ iframe {
   min-height: 350px;
   max-height: 700px;
 }
+
+
+/*------------------------------------------------------------------*/
+/*	02) Preloader
+/*------------------------------------------------------------------*/
+.metaverse_fn_preloader {
+    position: fixed;
+    z-index: 9999;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgb(15, 5, 20);
+    transition: all .5s ease;
+    display: -webkit-flex;
+    display: -moz-flex;
+    display: -ms-flex;
+    display: -o-flex;
+    display: flex;
+    -ms-align-items: center;
+    align-items: center;
+    justify-content: center;
+}

@@ -26,7 +26,7 @@ export default function SliderNFT() {
     dots: false,
     arrows: false,
     infinite: true,
-    slidesToShow: 2,
+    slidesToShow: 1,
     slidesToScroll: 1,
     autoplay: true,
     speed: 2000,
@@ -92,7 +92,7 @@ export default function SliderNFT() {
                 src={thumb}
                 alt="thumb"
                 className="rounded-3xl"
-                width="300px"
+                width="350px"
               />
             </div>
           </SliderItem>

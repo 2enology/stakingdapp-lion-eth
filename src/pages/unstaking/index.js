@@ -2,9 +2,9 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { ClassicSpinner } from "react-spinners-kit";
 
-import NftCard from "./nftcard";
+import NftCard from "../staking/nftcard";
 
-export default function Staking() {
+export default function Unstaking() {
   const [preloadState, setPreloadState] = useState(true);
 
   setInterval(() => {
@@ -71,12 +71,7 @@ export default function Staking() {
             </div>
           ) : (
             <div className="gap-3 grid grid-cols-1 lg:gap-7 lg:grid-cols-4 md:grid-cols-3 overflow-y-auto p-10 sm:grid-cols-3 staking-grid xl:gap-10 xl:grid-cols-5">
-              <NftCard />
-              <NftCard />
-              <NftCard />
-              <NftCard />
-              <NftCard />
-              <NftCard />
+              <NftCard unstakeState="unstake" />
             </div>
           )}
         </div>
