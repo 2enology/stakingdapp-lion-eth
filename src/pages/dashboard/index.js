@@ -23,12 +23,12 @@ export default function DashBoard() {
       animate={{ opacity: 1 }}
       transition={{ ease: "easeInOut", duration: 0.5, delay: 0.5 }}>
       <div className="2xl:px-32 flex justify-between lg:px-10 mb-10 md:px-20 mt-10 px-5 sm:px-10 w-full z-50">
-        <div className="border-2 justify-between staking_content w-full">
+        <div className="bg-custom-blur border-2 justify-between staking_content w-full">
           <div className="lg:flex w-full">
             <div className="grid grid-cols-2 lg:w-2/3">
               <div className="border-b-2 border-custom border-r-2 w-full">
                 <h1 className="ml-2 mt-3 sm:ml-14 sm:mt-14 sm:text-2xl text-indigo-500 text-left">
-                  Total Staked Lions
+                  Staked Lions
                 </h1>
                 <h1 className="ml-2 sm:ml-14 sm:text-4xl text-left text-lg text-white">
                   14 Lions
@@ -36,7 +36,7 @@ export default function DashBoard() {
               </div>
               <div className="border-b-2 border-custom w-full">
                 <h1 className="ml-2 mt-3 sm:ml-14 sm:mt-14 sm:text-2xl text-indigo-500 text-left">
-                  Total Unstaked Lions
+                  Unstaked Lions
                 </h1>
                 <h1 className="ml-2 sm:ml-14 sm:text-4xl text-left text-lg text-white">
                   6 Lions
@@ -47,7 +47,7 @@ export default function DashBoard() {
                   You have earned
                 </h1>
                 <h1 className="ml-2 sm:ml-14 sm:text-4xl text-left text-lg text-white">
-                  65,565 Burnable
+                  65,565 TCP
                 </h1>
               </div>
               <div className="border-b-2 border-custom lg:border-b-0 w-full">
@@ -55,7 +55,7 @@ export default function DashBoard() {
                   Available for claim
                 </h1>
                 <h1 className="ml-2 sm:ml-14 sm:text-4xl text-left text-lg text-white">
-                  343,99 Burnable
+                  343,99 TCP
                 </h1>
               </div>
             </div>
