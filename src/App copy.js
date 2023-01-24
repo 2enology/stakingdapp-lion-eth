@@ -21,7 +21,7 @@ function App() {
           <Routes>
             <Route path="/" element={<DashBoard />} />
             <Route path="/staking" element={<Staking />} />
-            <Route path="/unstaking" element={<Staking />} />
+            <Route path="/staking/unstake" element={<Staking />} />
           </Routes>
           <AppFooter />
         </Router>
