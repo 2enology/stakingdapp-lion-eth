@@ -19,7 +19,7 @@ export default function Topbar() {
             ? "Staking"
             : "Unstaking"}
         </h1>
-        <div className="border-2 border-custom border-opacity-20 flex rounded-full">
+        <div className="bg-custom-blur border-2 border-custom border-opacity-20 flex rounded-full">
           <Link
             to={"/"}
             className={`border-custom border-opacity-20 border-r-2 cursor-pointer duration-150
