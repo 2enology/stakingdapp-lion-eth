@@ -5,6 +5,6 @@ module.exports = {
   mintCount: 1,
   mintCost: 1,
   totalGas: 400000,
-  RoyalPetsContractAddr: "0x8cf4F00c2a7E5dC258449211509e56b033fd7C41",
+  NFTCONTRACT_ADDRESS: "0x0a7b31f6a8B3ff031064Ad2350bd82dF7e4A9Ddf",
   CareTokenAddr: "0x78D1137d0Ab926160531f524c9aE81872596E8BE",
 };
