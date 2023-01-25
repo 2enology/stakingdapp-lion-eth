@@ -1,5 +1,9 @@
 import { useState } from "react";
-import { useWeb3React } from "@web3-react/core";
+
+import {
+  NotificationContainer,
+  NotificationManager,
+} from "react-notifications";
 
 import NFTCONTRACT_ABI from "../../assets/abis/NFTCONTRACT_ABI.json";
 import STAKINGCONTRACT_ABI from "../../assets/abis/STAKINGCONTRACT_ABI.json";
@@ -15,8 +19,10 @@ const NftCard = ({
   imgUrl,
   balance,
   getMyNftList,
+  getMyStakedData,
   getStakedNfts,
   isApprovedState,
+  getMyUnstakedData,
 }) => {
   const [stakeLoadingState, setStakingLoadingState] = useState(false);
   const [loadingTitle, setLoadingTitle] = useState("");
@@ -44,6 +50,8 @@ const NftCard = ({
           tx.wait().then(() => {
             setStakingLoadingState(false);
             getMyNftList();
+            getMyUnstakedData();
+            NotificationManager.success("Staked successfully!");
           });
         })
         .catch(() => {
@@ -60,6 +68,8 @@ const NftCard = ({
                   tx.wait().then(() => {
                     setStakingLoadingState(false);
                     getMyNftList();
+                    getMyUnstakedData();
+                    NotificationManager.success("Staked successfully!");
                   });
                 }
               );
@@ -84,6 +94,8 @@ const NftCard = ({
         tx.wait().then(() => {
           setStakingLoadingState(false);
           getStakedNfts();
+          getMyStakedData();
+          NotificationManager.success("Unstaked successfully!");
         });
       })
       .catch(() => {
@@ -97,6 +109,9 @@ const NftCard = ({
     await StakingContract.claimRewards([tokenId], { gasLimit: 300000 })
       .then((tx) => {
         tx.wait().then(() => {
+          NotificationManager.success("Claimed successfully!");
+          getStakedNfts();
+          getMyStakedData();
           setStakingLoadingState(false);
         });
       })

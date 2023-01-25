@@ -9,7 +9,7 @@ import Unstaking from "./pages/unstaking";
 
 import { motion } from "framer-motion";
 import { ClassicSpinner } from "react-spinners-kit";
-
+import { NotificationContainer } from "react-notifications";
 import "./App.css";
 function App() {
   const [preloadState, setPreloadState] = useState(true);
@@ -24,11 +24,7 @@ function App() {
       animate={{ opacity: 1 }}
       transition={{ ease: "easeInOut", duration: 0.5, delay: 0.1 }}>
       <div className="main-section">
-        {/* {preloadState && (
-          <div className="metaverse_fn_preloader">
-            <ClassicSpinner size={40} />
-          </div>
-        )} */}
+        <NotificationContainer />
         <Router>
           <AppHeader />
           <Topbar />
