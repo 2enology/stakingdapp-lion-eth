@@ -23,8 +23,8 @@ export default function DashBoard() {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ ease: "easeInOut", duration: 0.5, delay: 0.5 }}>
-      <div className="2xl:px-32 flex justify-between lg:px-10 mb-10 md:px-20 mt-10 px-5 sm:px-10 w-full z-50">
-        <div className="bg-custom-blur border-2 justify-between staking_content w-full">
+      <div className="2xl:px-20 flex justify-between lg:px-10 mb-10 md:px-20 mt-10 px-5 sm:px-10 w-full z-50">
+        <div className="bg-custom-blur border-2 border-custom justify-between staking_content w-full">
           <div className="lg:flex w-full">
             <div className="grid grid-cols-2 lg:w-2/3">
               <div className="border-b-2 border-custom border-r-2 w-full">
