@@ -2,6 +2,7 @@ import Slider from "./Slider";
 import { motion } from "framer-motion";
 import { useWeb3React } from "@web3-react/core";
 import config from "../../config/config";
+import CountUp from "react-countup";
 
 const ethers = require("ethers");
 
@@ -31,7 +32,7 @@ export default function DashBoard() {
                   Staked Lions
                 </h1>
                 <h1 className="ml-2 sm:ml-14 sm:text-4xl text-left text-lg text-white">
-                  14 Lions
+                  <CountUp start={0} end={100} duration={3} /> Lions
                 </h1>
               </div>
               <div className="border-b-2 border-custom w-full">
@@ -39,7 +40,7 @@ export default function DashBoard() {
                   Unstaked Lions
                 </h1>
                 <h1 className="ml-2 sm:ml-14 sm:text-4xl text-left text-lg text-white">
-                  6 Lions
+                  <CountUp start={0} end={6} duration={3} /> Lions Lions
                 </h1>
               </div>
               <div className="border-b-2 border-custom border-r-2 lg:border-b-0 w-full">
@@ -47,7 +48,7 @@ export default function DashBoard() {
                   You have earned
                 </h1>
                 <h1 className="ml-2 sm:ml-14 sm:text-4xl text-left text-lg text-white">
-                  65,565 TCP
+                  <CountUp start={0} end={65224} duration={3} /> TCP
                 </h1>
               </div>
               <div className="border-b-2 border-custom lg:border-b-0 w-full">
@@ -55,7 +56,7 @@ export default function DashBoard() {
                   Available for claim
                 </h1>
                 <h1 className="ml-2 sm:ml-14 sm:text-4xl text-left text-lg text-white">
-                  343,99 TCP
+                  <CountUp start={0} end={3255} duration={3} /> TCP
                 </h1>
               </div>
             </div>

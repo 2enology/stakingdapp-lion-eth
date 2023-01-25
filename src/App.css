@@ -1,8 +1,3 @@
-* {
-  scrollbar-width: auto;
-  scrollbar-color: #2A2D3A #ffffff;
-}
-
 /* Chrome, Edge, and Safari */
 *::-webkit-scrollbar {
   width: 10px;
@@ -13,7 +8,7 @@
 }
 
 *::-webkit-scrollbar-thumb {
-  background: #6b6b66;
+  background: #50504f;
   border-bottom-right-radius: 30px;
   border: 3px none #636060;
 }
@@ -346,12 +341,16 @@ iframe {
 }
 
 .bg-custom-blur {
-  backdrop-filter: blur(20px) !important;
+  backdrop-filter: blur(7px) !important;
 }
 
 .staking-grid {
   min-height: 350px;
   max-height: 700px;
+}
+
+.min-h-300 {
+  min-height: 250px;
 }
 
 
@@ -367,12 +366,9 @@ iframe {
   bottom: 0;
   background: rgb(15, 5, 20);
   transition: all .5s ease;
-  display: -webkit-flex;
-  display: -moz-flex;
-  display: -ms-flex;
-  display: -o-flex;
   display: flex;
   -ms-align-items: center;
   align-items: center;
   justify-content: center;
 }
+
