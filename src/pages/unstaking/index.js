@@ -1,18 +1,26 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { ClassicSpinner } from "react-spinners-kit";
+
+import { NotificationManager } from "react-notifications";
+import "react-notifications/lib/notifications.css";
+
 import { useWeb3React } from "@web3-react/core";
 import config from "../../config/config";
 import NftCard from "../staking/nftcard";
 
 import NFTCONTRACT_ABI from "../../assets/abis/NFTCONTRACT_ABI.json";
 import STAKINGCONTRACT_ABI from "../../assets/abis/STAKINGCONTRACT_ABI.json";
+import REWARDTOKENCONTRACT_ABI from "../../assets/abis/REWARDTOKENCONTRACT_ABI.json";
 
 const ethers = require("ethers");
 
 export default function Unstaking() {
   const [preloadState, setPreloadState] = useState(true);
   const [mynftArray, setMyNftArray] = useState([]);
+  const [stakedNftArray, setStakedNftArray] = useState(0);
+  const [totalReward, setTotalReward] = useState(0);
+  const [myBalanceOf, setMyBalanceOf] = useState(0);
   const [isApprovedAllState, setIsApprovedAllState] = useState(false);
   const [funcRunState, setFuncRunState] = useState(false);
   const [stakingState, setStakingState] = useState(false);
@@ -31,6 +39,11 @@ export default function Unstaking() {
   const StakingContract = new ethers.Contract(
     config.STAKINGCONTRACT_ADDRESS,
     STAKINGCONTRACT_ABI,
+    Signer
+  );
+  const RewardContract = new ethers.Contract(
+    config.REWARDTOKEN_ADDRESS,
+    REWARDTOKENCONTRACT_ABI,
     Signer
   );
 
@@ -63,58 +76,82 @@ export default function Unstaking() {
     );
   };
 
+  const getMydata = async () => {
+    await StakingContract.getStakedNFTList(account).then((data) => {
+      setStakedNftArray(data.length);
+    });
+    await StakingContract.getTotalrewards(account).then((data) => {
+      const unrounded = ethers.utils.formatEther(data.toString());
+      const total = parseFloat(unrounded).toFixed(2);
+      setTotalReward(total);
+    });
+    await RewardContract.balanceOf(account).then((balance) => {
+      const unrounded = ethers.utils.formatEther(balance.toString());
+      const myBalance = parseFloat(unrounded).toFixed(2);
+      setMyBalanceOf(myBalance);
+    });
+  };
+
   useEffect(() => {
     if (account) {
       getMyNftList();
       getApproveAllState();
+      getMydata();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [account]);
 
   // StakeAll Fuction
   const stakeAllFunc = async () => {
-    setFuncRunTitle("Staking All");
-    setFuncRunState(true);
-    const nftIDArray = [];
-    // eslint-disable-next-line no-plusplus
-    for (let i = 0; i < mynftArray.length; i++) {
-      nftIDArray[i] = mynftArray[i].tokenId;
-    }
-    if (isApprovedAllState) {
-      await StakingContract.stake(nftIDArray).then((tx) => {
-        tx.wait()
-          .then(() => {
-            setFuncRunState(false);
-            setStakingState(false);
-            getMyNftList();
-          })
-          .catch(() => {
-            console.log("canceled");
-            setFuncRunState(false);
-          });
-      });
+    if (mynftArray.length === 0) {
+      NotificationManager.error("Nothing to stake!");
     } else {
-      NFTContract.setApprovalForAll(config.STAKINGCONTRACT_ADDRESS, true)
-        .then((tx) => {
+      setFuncRunTitle("Staking All");
+      setFuncRunState(true);
+      const nftIDArray = [];
+      // eslint-disable-next-line no-plusplus
+      for (let i = 0; i < mynftArray.length; i++) {
+        nftIDArray[i] = mynftArray[i].tokenId;
+      }
+      if (isApprovedAllState) {
+        await StakingContract.stake(nftIDArray).then((tx) => {
           tx.wait()
             .then(() => {
-              StakingContract.stake(nftIDArray, { gasLimit: 300000 }).then(
-                (tx) => {
-                  tx.wait().then(() => {
-                    setFuncRunState(false);
-                    setStakingState(false);
-                    getMyNftList();
-                  });
-                }
-              );
+              setFuncRunState(false);
+              setStakingState(false);
+              getMydata();
+              getMyNftList();
+              NotificationManager.success("Staked successfully!");
             })
             .catch(() => {
+              console.log("canceled");
               setFuncRunState(false);
             });
-        })
-        .catch(() => {
-          setFuncRunState(false);
         });
+      } else {
+        NFTContract.setApprovalForAll(config.STAKINGCONTRACT_ADDRESS, true)
+          .then((tx) => {
+            tx.wait()
+              .then(() => {
+                StakingContract.stake(nftIDArray, { gasLimit: 300000 }).then(
+                  (tx) => {
+                    tx.wait().then(() => {
+                      setFuncRunState(false);
+                      setStakingState(false);
+                      getMyNftList();
+                      NotificationManager.success("Staked successfully!");
+                    });
+                  }
+                );
+              })
+              .catch(() => {
+                setFuncRunState(false);
+              });
+          })
+          .catch(() => {
+            setFuncRunState(false);
+          });
+      }
     }
   };
 
@@ -129,26 +166,26 @@ export default function Unstaking() {
             <div className="flex lg:w-auto w-full">
               <div className="border-custom border-opacity-20 border-r-2 px-2 py-4 rounded-l-full sm:px-8 text-center w-1/3">
                 <h1 className="lg:text-left text-center text-gray-500 text-sm">
-                  Total Lions
+                  Unstaked
                 </h1>
                 <h1 className="lg:text-left md:text-2xl text-center text-white text-xs">
-                  15 Lions
+                  {mynftArray.length} Lions
                 </h1>
               </div>
               <div className="border-custom border-opacity-20 border-r-2 px-2 py-4 sm:px-8 text-center w-1/3">
                 <h1 className="lg:text-left text-center text-gray-500 text-sm">
-                  Staked Lions
+                  Staked
                 </h1>
                 <h1 className="lg:text-left md:text-2xl text-center text-white text-xs">
-                  15 Lions
+                  {stakedNftArray} Lions
                 </h1>
               </div>{" "}
               <div className="border-custom border-opacity-20 px-2 py-4 sm:border-r-2 sm:px-8 text-center w-1/3">
                 <h1 className="lg:text-left text-center text-gray-500 text-sm">
-                  Staked Lions
+                  Total Lions
                 </h1>
                 <h1 className="lg:text-left md:text-2xl text-center text-white text-xs">
-                  15 Lions
+                  {stakedNftArray + mynftArray.length} Lions
                 </h1>
               </div>{" "}
             </div>
@@ -158,21 +195,21 @@ export default function Unstaking() {
                   Avilable for Claim
                 </h1>
                 <h1 className="lg:text-left md:text-2xl text-center text-white text-xs">
-                  8452
+                  {totalReward} TSP
                 </h1>
               </div>{" "}
               <div className="border-custom border-opacity-20 px-2 py-4 sm:border-r-2 text-center w-1/3">
                 <h1 className="lg:text-left text-center text-gray-500 text-sm">
-                  Paid Out
+                  My TSP
                 </h1>
                 <h1 className="lg:text-left md:text-2xl text-center text-white text-xs">
-                  95.65.5
+                  {myBalanceOf} TSP
                 </h1>
               </div>{" "}
-              <div className="border-custom border-opacity-20 flex justify-center px-6 py-4 text-center w-1/3">
+              <div className="border-custom border-opacity-20 flex justify-center px-6 py-7 text-center w-1/3">
                 <button
                   className="bg-white duration-200 hover:bg-green-700 hover:text-white lg:px-10
-                 lg:py-1 px-10 py-1 rounded-2xl text-sm"
+                 lg:py-1 px-6 rounded-2xl text-sm md:py-3"
                   onClick={() => stakeAllFunc()}>
                   Stake All
                 </button>
@@ -198,6 +235,7 @@ export default function Unstaking() {
                   {mynftArray.map((data, index) => (
                     <NftCard
                       getMyNftList={getMyNftList}
+                      getMyUnstakedData={getMydata}
                       stakeState={false}
                       tokenId={data.tokenId}
                       imgUrl={data.imgUrl}

@@ -341,7 +341,7 @@ iframe {
 }
 
 .bg-custom-blur {
-  backdrop-filter: blur(7px) !important;
+  backdrop-filter: blur(5px) !important;
 }
 
 .staking-grid {
