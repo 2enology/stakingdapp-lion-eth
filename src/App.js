@@ -24,11 +24,11 @@ function App() {
       animate={{ opacity: 1 }}
       transition={{ ease: "easeInOut", duration: 0.5, delay: 0.1 }}>
       <div className="main-section">
-        {preloadState && (
+        {/* {preloadState && (
           <div className="metaverse_fn_preloader">
             <ClassicSpinner size={40} />
           </div>
-        )}
+        )} */}
         <Router>
           <AppHeader />
           <Topbar />

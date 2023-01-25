@@ -91,7 +91,7 @@ export default function SliderNFT() {
               <img
                 src={thumb}
                 alt="thumb"
-                className="rounded-3xl"
+                className="rounded-3xl shadow-2xl shadow-white"
                 width="350px"
               />
             </div>

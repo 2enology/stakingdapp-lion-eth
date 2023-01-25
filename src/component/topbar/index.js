@@ -11,7 +11,7 @@ export default function Topbar() {
       animate={{ opacity: 1 }}
       transition={{ ease: "easeInOut", duration: 0.5, delay: 0.5 }}>
       <div className="justify-between lg:flex lg:px-10 md:px-20 mt-20 px-5 sm:px-10 w-full xl:px-40 z-50">
-        <h1 className="lg:text-left mb-2 sm:text-5xl text-4xl text-center text-white uppercase">
+        <h1 className="lg:text-left mb-2 sm:text-4xl text-4xl text-center text-white uppercase">
           {location.pathname.split("/")[1] === ""
             ? "DashBoard"
             : location.pathname.split("/")[1] === "staking"

@@ -8,10 +8,10 @@ export default function Footer() {
   return (
     <footer
       id="footer"
-      className="border-custom border-t-2 flex justify-between lg:px-10 mb-1 md:px-20 mt-40 px-5 py-1 sm:px-10 w-full xl:px-40 z-50">
+      className="border-custom border-t-2 flex justify-between lg:mt-40 lg:px-10 md:px-20 px-5 py-1 sm:px-10 w-full xl:px-40 z-50">
       <a className="flex logo mt-2" href="/">
         <img src={logoIMG} alt="logoIMG" className="h-14 w-14" />
-        <h1 className="lg:mt-5 md:mt-3 mt-3 sm:block text-white text-xl">
+        <h1 className="lg:mt-4 md:mt-3 mt-3 sm:block text-white text-xl">
           Lion NFTs
         </h1>
       </a>

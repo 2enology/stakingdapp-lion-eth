@@ -43,7 +43,6 @@ export default function Header() {
       }
     };
     connectWalletOnPageLoad();
-    return;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -59,14 +58,14 @@ export default function Header() {
         {!account ? (
           <button
             variant="hovered"
-            className="bg-gray-100 flex font pt-4 px-3 rounded-full text-md"
+            className="bg-gray-100 duration-300 flex hover:bg-green-700 hover:text-white pt-4 px-3 rounded-full text-md"
             onClick={() => connect()}>
             <FaWallet className="mr-2 mt-1" /> Connect Wallet
           </button>
         ) : (
           <button
             variant="hovered"
-            className="bg-gray-100 flex font pt-4 px-4 rounded-full text-md"
+            className="bg-gray-100 duration-300 flex hover:bg-green-700 hover:text-white pt-4 px-4 rounded-full text-md"
             onClick={() => disconnect()}>
             <FaWallet className="mr-2 mt-1" />
             {account.toString().slice(0, 4)} .... {account.toString().slice(-4)}
