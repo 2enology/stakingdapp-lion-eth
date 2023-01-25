@@ -9,7 +9,15 @@ import { ClassicSpinner } from "react-spinners-kit";
 import config from "../../config/config";
 const ethers = require("ethers");
 
-const NftCard = ({ stakeState, tokenId, imgUrl, level, balance }) => {
+const NftCard = ({
+  stakeState,
+  tokenId,
+  imgUrl,
+  balance,
+  getMyNftList,
+  getStakedNfts,
+  isApprovedState,
+}) => {
   const [stakeLoadingState, setStakingLoadingState] = useState(false);
   const [loadingTitle, setLoadingTitle] = useState("");
   const Provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -26,23 +34,46 @@ const NftCard = ({ stakeState, tokenId, imgUrl, level, balance }) => {
     NFTCONTRACT_ABI,
     Signer
   );
+
   const stakeFunc = async () => {
     setLoadingTitle("Staking");
     setStakingLoadingState(true);
-    NFTContract.approve(config.STAKINGCONTRACT_ADDRESS, tokenId)
-      .then((tx) => {
-        tx.wait().then(() => {
-          StakingContract.stake([tokenId], { gasLimit: 300000 }).then((tx) => {
-            tx.wait().then(() => {
+    if (isApprovedState) {
+      StakingContract.stake([tokenId], { gasLimit: 300000 })
+        .then((tx) => {
+          tx.wait().then(() => {
+            setStakingLoadingState(false);
+            getMyNftList();
+          });
+        })
+        .catch(() => {
+          console.log("canceled");
+          setStakingLoadingState(false);
+        });
+    } else {
+      NFTContract.setApprovalForAll(config.STAKINGCONTRACT_ADDRESS, true)
+        .then((tx) => {
+          tx.wait()
+            .then(() => {
+              StakingContract.stake([tokenId], { gasLimit: 300000 }).then(
+                (tx) => {
+                  tx.wait().then(() => {
+                    setStakingLoadingState(false);
+                    getMyNftList();
+                  });
+                }
+              );
+            })
+            .catch(() => {
+              console.log("canceled");
               setStakingLoadingState(false);
             });
-          });
+        })
+        .catch(() => {
+          console.log("canceled");
+          setStakingLoadingState(false);
         });
-      })
-      .catch(() => {
-        console.log("canceled");
-        setStakingLoadingState(false);
-      });
+    }
   };
 
   const unStakeFunc = async () => {
@@ -52,10 +83,10 @@ const NftCard = ({ stakeState, tokenId, imgUrl, level, balance }) => {
       .then((tx) => {
         tx.wait().then(() => {
           setStakingLoadingState(false);
+          getStakedNfts();
         });
       })
       .catch(() => {
-        console.log("canceled");
         setStakingLoadingState(false);
       });
   };
@@ -70,7 +101,6 @@ const NftCard = ({ stakeState, tokenId, imgUrl, level, balance }) => {
         });
       })
       .catch(() => {
-        console.log("canceled");
         setStakingLoadingState(false);
       });
   };
@@ -80,44 +110,24 @@ const NftCard = ({ stakeState, tokenId, imgUrl, level, balance }) => {
       <div className="border-2 border-custom duration-300 hover:shadow-2xl rounded-3xl">
         <img
           src={imgUrl}
-          className="min-h-300 p-5 rounded-3xl w-full"
+          className="min-h-300 p-3 rounded-3xl w-full"
           alt="cardImg"
         />
         {stakeState ? (
           <>
-            <h1 className="flex justify-between p-3 text-2xl text-white w-full">
+            <h1 className="flex justify-between p-3 text-white text-xl w-full">
               <span>Lion :</span> <span>#{tokenId}</span>
             </h1>
-            <h1 className="flex justify-between p-3 text-gray-400 text-lg w-full">
-              <span>Level :</span> <span>{level}</span>
-            </h1>
+
             <h1 className="flex justify-between p-3 text-gray-400 text-lg w-full">
               <span>Balance :</span> <span>{balance} TSP</span>
             </h1>
           </>
         ) : (
-          <h1 className="flex justify-between p-3 text-2xl text-white w-full">
+          <h1 className="flex justify-between p-3 text-white text-xl w-full">
             <span>Lion :</span> <span>#{tokenId}</span>
           </h1>
         )}
-
-        <div className="border-custom border-t-2 flex justify-between w-full">
-          {stakeState === false ? (
-            <></>
-          ) : (
-            <>
-              {" "}
-              <button
-                className="border-custom border-r-2 duration-150 hover:bg-green-700 p-4 text-white w-1/2"
-                onClick={() => unStakeFunc()}>
-                Level up
-              </button>
-              <button className="duration-150 hover:bg-green-700 p-4 text-center text-white w-1/2">
-                Level Max
-              </button>
-            </>
-          )}
-        </div>
 
         <div className="border-custom border-t-2 flex justify-between w-full">
           {stakeState === false ? (
