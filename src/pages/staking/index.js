@@ -160,10 +160,10 @@ export default function Staking() {
       <div className="2xl:px-20 flex justify-between lg:px-10 mb-10 md:px-20 mt-10 px-5 sm:px-10 w-full xl:px-10 z-50">
         <div className="bg-custom-blur border-2 border-custom justify-between staking_content w-full">
           <div className="border-b-2 border-custom border-opacity-20 justify-between lg:flex w-full">
-            <div className="flex lg:w-auto w-full">
+            <div className="flex lg:w-1/3 w-full">
               <div className="border-custom border-opacity-20 border-r-2 px-2 py-4 rounded-l-full sm:px-8 text-center w-1/3">
                 <h1 className="lg:text-left text-center text-gray-500 text-sm">
-                  Staked
+                  Hunting
                 </h1>
                 <h1 className="lg:text-left md:text-2xl text-center text-white text-xs">
                   {stakedNftArray} Lions
@@ -171,7 +171,7 @@ export default function Staking() {
               </div>
               <div className="border-custom border-opacity-20 border-r-2 px-2 py-4 sm:px-8 text-center w-1/3">
                 <h1 className="lg:text-left text-center text-gray-500 text-sm">
-                  Unstaked
+                  At home
                 </h1>
                 <h1 className="lg:text-left md:text-2xl text-center text-white text-xs">
                   {unStakedNftArray} Lions
@@ -186,7 +186,15 @@ export default function Staking() {
                 </h1>
               </div>{" "}
             </div>
-            <div className="border-custom border-t-2 flex lg:border-none">
+            <div className="flex items-center justify-center lg:1/3 text-center text-white">
+              <h1>
+                Your Lions are hungry! Send your Lions out to Hunt in The
+                Savanna. <br />
+                This will feed the Pride and reward you with TSP tokens! See you
+                in The Savanna!
+              </h1>
+            </div>
+            <div className="border-custom border-t-2 flex lg:1/3 lg:border-none">
               <div className="border-custom border-opacity-20 border-r-2 px-2 py-4 sm:border-l-2 text-center w-1/3">
                 <h1 className="lg:text-left text-center text-gray-500 text-sm">
                   Avilable for Claim
@@ -195,60 +203,76 @@ export default function Staking() {
                   {totalReward} TSP
                 </h1>
               </div>{" "}
-              <div className="border-custom border-opacity-20 flex justify-center px-6 py-8 sm:border-r-2 text-center w-1/3">
+              <div className="border-custom border-opacity-20 flex justify-center px-12 py-8 sm:border-r-2 text-center w-1/3">
                 <button
                   className="bg-white duration-200 hover:bg-green-700 hover:text-white lg:px-10 lg:py-2 px-4 rounded-2xl text-sm"
                   onClick={() => unStakeAllFunc()}>
-                  Unstake All
+                  Return all Lions.
                 </button>
               </div>{" "}
-              <div className="border-custom border-opacity-20 flex justify-center px-6 py-8 text-center w-1/3">
+              <div className="border-custom border-opacity-20 flex justify-center px-3 py-8 text-center w-1/3">
                 <button
-                  className="bg-green-700 duration-200 hover:bg-white hover:text-black lg:px-10 lg:py-2 md:py-3 px-4 rounded-2xl text-sm text-white"
+                  className="bg-green-700 duration-200 hover:bg-white hover:text-black
+                   lg:px-1 lg:py-2 md:py-3 px-4 rounded-2xl text-sm text-white"
                   onClick={() => claimAllFunc()}>
-                  Claim All
+                  Claim Rewards
                 </button>
               </div>{" "}
             </div>
           </div>
-          {preloadState ? (
-            <div className="staking-grid">
-              <div className="flex justify-center mt-44 top-10 w-full">
-                <ClassicSpinner size={40} />
-              </div>
-            </div>
-          ) : (
+          {account ? (
             <>
-              {!stakedState ? (
+              {" "}
+              {preloadState ? (
                 <div className="staking-grid">
                   <div className="flex justify-center mt-44 top-10 w-full">
-                    <h1 className="text-2xl text-gray-500">Nothing to show</h1>
+                    <ClassicSpinner size={40} />
                   </div>
                 </div>
               ) : (
-                <div className="gap-3 grid grid-cols-1 lg:gap-7 lg:grid-cols-4 md:grid-cols-2 overflow-y-auto p-10 sm:grid-cols-2 staking-grid xl:gap-5 xl:grid-cols-5">
-                  {stakedNfts &&
-                    stakedNfts.map((data, index) => (
-                      <NftCard
-                        getMyStakedData={getMydata}
-                        getStakedNfts={getStakedNfts}
-                        stakeState={true}
-                        balance={data.balance}
-                        tokenId={data.tokenId}
-                        imgUrl={data.imgUrl}
-                        key={index}
-                      />
-                    ))}
+                <>
+                  {!stakedState ? (
+                    <div className="staking-grid">
+                      <div className="flex justify-center mt-44 top-10 w-full">
+                        <h1 className="text-2xl text-gray-500">
+                          Nothing to show
+                        </h1>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="gap-3 grid grid-cols-1 lg:gap-7 lg:grid-cols-4 md:grid-cols-2 overflow-y-auto p-10 sm:grid-cols-2 staking-grid xl:gap-5 xl:grid-cols-5">
+                      {stakedNfts &&
+                        stakedNfts.map((data, index) => (
+                          <NftCard
+                            getMyStakedData={getMydata}
+                            getStakedNfts={getStakedNfts}
+                            stakeState={true}
+                            balance={data.balance}
+                            tokenId={data.tokenId}
+                            imgUrl={data.imgUrl}
+                            key={index}
+                          />
+                        ))}
+                    </div>
+                  )}
+                </>
+              )}
+              {funcRunState && (
+                <div className="metaverse_fn_preloader opacity-60 rounded-2xl">
+                  <ClassicSpinner size={40} />
+                  <h1 className="ml-5 mt-2 text-md text-white">
+                    {funcRunTitle} ...
+                  </h1>
                 </div>
               )}
             </>
-          )}
-          {funcRunState && (
-            <div className="metaverse_fn_preloader opacity-60 rounded-2xl">
-              <ClassicSpinner size={40} />
-              <h1 className="ml-5 mt-2 text-md text-white">
-                {funcRunTitle} ...
-              </h1>
+          ) : (
+            <div className="staking-grid">
+              <div className="flex justify-center mt-44 top-10 w-full">
+                <h1 className="text-2xl text-gray-500">
+                  Please Connect Wallet
+                </h1>
+              </div>
             </div>
           )}
         </div>

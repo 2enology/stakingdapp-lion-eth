@@ -3,8 +3,8 @@ pragma solidity 0.8.7;
 
 // import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 // import "@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol";
-
-// import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "@openzeppelin/contracts/utils/math/SafeMath.sol";
+// import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 interface IERC165 {
     /**
      * @dev Returns true if this contract implements the interface defined by
@@ -152,6 +152,9 @@ interface IERC721 is IERC165 {
         uint256 tokenId,
         bytes calldata data
     ) external;
+
+    function walletOfOwner(address _owner) external view returns (uint256[] memory);
+    
 }
 
 
@@ -254,145 +257,188 @@ interface IERC20 {
 
 
 contract StakeNFT {
+    using SafeMath for uint256;
+    
+    /// ERC721A NFT & ERC20 token Interfaces
+    IERC20 public immutable rewardsToken;
+    IERC721 public immutable nftCollection;
 
-    //State variabble
-    uint private _stakingId = 0;
-    address private NFTToken = 0xFC7FedA4B25144d751272b6F6F6E2725Ffd51a13;
-    address private REWARDToken = 0xBE2095Dd1989942ef81610BAC0fA258b35362a8c;
+    /// Staked NFT INFO
+    /// 2022.8.6 10:47 PM
+    struct stakeNFTInfo{
+        address owner;
+        uint8 level;
+        uint256 tokenID;
+        bool isStaked;
+        uint256 lastUpdatedTime;
+        uint256 lackRewards;
+    }
+    uint256 private burnToken = 0;
 
-    address private admin;
-    uint private rate;
+    mapping(uint256 => stakeNFTInfo) public stakedNFTs;
+    mapping(uint8 => uint256) private rewardsPerday;
+    mapping(uint8 => uint256) private upgradeLevelBurnAmount;
+    mapping(uint8 => uint256) private upgradeLevelMaxBurnAmount;
 
-    //constructor
-    constructor(){
-        admin = msg.sender;
+    constructor(IERC721 _sNFT, IERC20 _sToken){
+        nftCollection = _sNFT;
+        rewardsToken = _sToken;
+
+        rewardsPerday[0] = 1 ether;
+        rewardsPerday[1] = 2 ether;
+        rewardsPerday[2] = 3 ether;
+        rewardsPerday[3] = 4 ether;
+        rewardsPerday[4] = 5 ether;
+
+        upgradeLevelBurnAmount[0] = 12 ether;
+        upgradeLevelBurnAmount[1] = 13 ether;
+        upgradeLevelBurnAmount[2] = 14 ether;
+        upgradeLevelBurnAmount[3] = 15 ether;
+
+        upgradeLevelMaxBurnAmount[0] = 20 ether;
+        upgradeLevelMaxBurnAmount[1] = 18 ether;
+        upgradeLevelMaxBurnAmount[2] = 16 ether;
+        upgradeLevelMaxBurnAmount[3] = 13 ether;
+
     }
 
-    //enumerator
-    enum StakingStatus {Active,  Claimed, Cancelled}
-
-    //structs
-    struct Staking {
-        address staker;    
-        address token;
-        uint256 tokenId;
-        uint256 releaseTime;
-        StakingStatus status;
-        uint256 StakingId;
-    }
-
-    //mapping
-    mapping(uint256 => Staking) private _StakedItem; 
-
-
-    //event
-    event tokenStaked(address indexed staker, address indexed token, uint256 token_id, StakingStatus status, uint256 StakingId);
-    event tokenClaimStatus(address indexed token, uint256 indexed token_id, StakingStatus indexed status, uint256 StakingId);
-    event tokenClaimComplete(address indexed token, uint256 indexed token_id, StakingStatus indexed status, uint256 StakingId);
-    event tokenCancelComplete(address indexed token, uint256 indexed token_id, StakingStatus indexed status, uint256 StakingId);
-
-    //function to call another function
-    function callStakeToken(address token, uint256[] memory _tokenID) public {
-        require(token == NFTToken, "incorrect NFT to stake"); // hardcode the NFT smart contract to allow only specific NFT into staking, assume 0xd2...d005 as NFT contract address
-        stakeToken(_tokenID);
-    }
-
-    //function to transfer NFT from user to contract
-    function stakeToken(uint256[] memory tokenId) private {
-        uint256 releaseTime = block.timestamp;
-
-        for (uint256 i = 0; i < tokenId.length; i++) {
-            IERC721(NFTToken).transferFrom(msg.sender,address(this),tokenId[i]); // User must approve() this contract address via the NFT ERC721 contract before NFT can be transfered
-            
-            uint256 currentStakingId = _stakingId;
-
-            Staking memory staking = Staking(msg.sender, NFTToken, tokenId[i], releaseTime, StakingStatus.Active, currentStakingId);
-            
-            _StakedItem[_stakingId] = staking;
-            _stakingId++;
-            
-            emit tokenStaked(msg.sender, staking.token, staking.tokenId, staking.status, currentStakingId);
+    /// NFT staking function
+    /// transfer NFTs to NFTstaking contract
+    /// Create stakedNFT info and add to (stakedNFTs)mapping
+    function stake(uint256[] calldata _tokenIDs) public {
+        uint256 len = _tokenIDs.length;
+        for(uint256 i; i < len; i++){
+//            require(nftCollection.ownerOf(_tokenIDs[i]) == msg.sender, "You don't won this NFT");
+            if(nftCollection.ownerOf(_tokenIDs[i]) == msg.sender && stakedNFTs[_tokenIDs[i]].isStaked == false){
+                nftCollection.transferFrom(msg.sender, address(this), _tokenIDs[i]);
+                
+                stakedNFTs[_tokenIDs[i]].owner = msg.sender;
+                stakedNFTs[_tokenIDs[i]].level = 0;
+                stakedNFTs[_tokenIDs[i]].isStaked = true;
+                stakedNFTs[_tokenIDs[i]].lastUpdatedTime = block.timestamp;
+                stakedNFTs[_tokenIDs[i]].lackRewards = 0;
+            }
         }
-        
     }
 
-    //function to view staked NFT
-    function viewStake(uint256 stakingId)public view returns (Staking memory) {
-        return _StakedItem[stakingId];
-    }
+    // If user has any DCAT staked and if he tried to unStake 
+    // At first calculate the rewards and ClaimRewards
+    // DCAT are returned to Staker
+    function unStake(uint256[] calldata _tokenIDs) public {
+        //require(getStakedNFTCount(msg.sender) > 0, "You have no staked NFTS");
 
-    //function to check NFT stake duration status 
-    function checkStake(uint256 stakingId, address staker) public returns (Staking memory) {
-        Staking storage staking = _StakedItem[stakingId];
-        
-        require(staker == msg.sender,"You cannot check this staking as it is not listed under this address");
-        require(staking.status == StakingStatus.Active,"Staking is not active or claimed");
-        
+        uint256 len = _tokenIDs.length;
+        claimRewards(_tokenIDs);
 
-        emit tokenClaimStatus(staking.token, staking.tokenId, staking.status, staking.StakingId);
-        return _StakedItem[stakingId];
-
-    }
-
-    //function to claim reward token if NFT stake duration is completed
-    function claimReward(uint256[] memory stakingId) public {
-        uint256 totalAmount;
-
-        for (uint256 i = 0; i < stakingId.length; i++) {
-            Staking storage staking = _StakedItem[stakingId[i]];
-            
-            require(staking.staker == msg.sender,"You cannot cancel this staking as it is not listed under this address");
-            require(staking.status == StakingStatus.Active,"Your reward is either not claimable yet or has been claimed");
-
-            totalAmount += rate * (block.timestamp - staking.releaseTime) / 25 days;
-            staking.releaseTime = block.timestamp;
-
-            emit tokenClaimComplete(staking.token, staking.tokenId, staking.status, staking.StakingId);
+        for(uint256 i; i < len; i++) {
+            if(stakedNFTs[_tokenIDs[i]].owner == msg.sender && stakedNFTs[_tokenIDs[i]].isStaked == true){
+                stakedNFTs[_tokenIDs[i]].isStaked = false;
+                nftCollection.transferFrom(address(this), msg.sender, _tokenIDs[i]);
+            }
         }
+    }
 
-        IERC20(REWARDToken).transfer(msg.sender, totalAmount);
+    function claimRewards(uint256[] calldata _tokenIDs) public {
+        uint256 len = _tokenIDs.length;
+        uint256 rewards = 0;
+        for(uint256 i; i < len; i++){
+            if(stakedNFTs[_tokenIDs[i]].owner == msg.sender && stakedNFTs[_tokenIDs[i]].isStaked == true){
+                rewards = rewards.add(calculateRewardsNFT(_tokenIDs[i]));
+                stakedNFTs[_tokenIDs[i]].lastUpdatedTime = block.timestamp;
+                stakedNFTs[_tokenIDs[i]].lackRewards = 0;
+            }
+        }
+        require(rewardsToken.balanceOf(address(this)) > rewards, "not enough money, plz let the owner know");
+        rewardsToken.transfer(msg.sender, rewards);
+    }
+
+    function UpgradeLevel(uint256 _tokenID) public {
+        require(nftCollection.ownerOf(_tokenID) == address(this), "This NFT is not staked yet");
+        require(stakedNFTs[_tokenID].isStaked == true, "This NFT is not staked yet");
+        require(stakedNFTs[_tokenID].owner == msg.sender, "This is not your nft, you cannot modify this NFT info");
+
+        uint8 currentLevel = stakedNFTs[_tokenID].level;
+
+        require(currentLevel < 4, "You can no longer upgrade the level");
+        require(rewardsToken.balanceOf(msg.sender) >= upgradeLevelBurnAmount[currentLevel], "You don't have enough token to Upgrade Level");
+
+        stakedNFTs[_tokenID].lackRewards = calculateRewardsNFT(_tokenID);
+        stakedNFTs[_tokenID].lastUpdatedTime = block.timestamp;
+
+        burn(msg.sender, upgradeLevelBurnAmount[currentLevel]);
+        stakedNFTs[_tokenID].level++;
+    }
+
+    function UpgradeLevelMax(uint256 _tokenID) public {
+        require(nftCollection.ownerOf(_tokenID) == address(this), "This NFT is not staked yet");
+        require(stakedNFTs[_tokenID].isStaked == true, "This NFT is not staked yet");
+        require(stakedNFTs[_tokenID].owner == msg.sender, "It's your nft, you cannot modify this NFT info");
+        uint8 currentLevel = stakedNFTs[_tokenID].level;
+
+        require(currentLevel < 4, "You can no longer upgrade the level");
+        require(rewardsToken.balanceOf(msg.sender) >= upgradeLevelMaxBurnAmount[currentLevel], "You don't have enough token to Upgrade Level");
+
+        stakedNFTs[_tokenID].lackRewards = calculateRewardsNFT(_tokenID);
+        stakedNFTs[_tokenID].lastUpdatedTime = block.timestamp;
+
+        burn(msg.sender, upgradeLevelMaxBurnAmount[currentLevel]);
+        stakedNFTs[_tokenID].level = 4;
+    }
+
+    function burn(address user, uint256 amount) internal{
+        rewardsToken.transferFrom(user, address(0), amount);
+        burnToken = burnToken.add(amount);
+    }
+
+    /* ========= VIEWS ========= */
+    function calculateRewardsNFT(uint256 _tokenID) public view returns (uint256){
+        require(stakedNFTs[_tokenID].isStaked == true, "This NFT is not staking now");
+        // uint256 rewards = ((block.timestamp.sub(stakedNFTs[_tokenID].lastUpdatedTime)).mul(
+        //     rewardsPerday[stakedNFTs[_tokenID].level])).add(stakedNFTs[_tokenID].lackRewards);
+        uint256 rewards = (block.timestamp.sub(stakedNFTs[_tokenID].lastUpdatedTime)).mul(rewardsPerday[stakedNFTs[_tokenID].level]);
+        rewards = (rewards.div(3600)).div(24);
+        rewards = rewards.add(stakedNFTs[_tokenID].lackRewards);
+        return rewards;
+    }
+
+    function getStakedNFTCount(address user) public view returns (uint256){
+        uint256[] memory totalStakedNFTList = nftCollection.walletOfOwner(address(this));
+        uint256 count = 0;
+        for(uint256 i; i < totalStakedNFTList.length; i++){
+            if(stakedNFTs[totalStakedNFTList[i]].owner == user && stakedNFTs[totalStakedNFTList[i]].isStaked == true){
+                count++;
+            }
+        }
+        return count;
+    }
+
+    function getStakedNFTList(address user) public view returns (uint256[] memory){
+        uint256[] memory totalStakedNFTList = nftCollection.walletOfOwner(address(this));
+        uint256[] memory stakedNFTList = new uint256[](getStakedNFTCount(user));
+        uint256 j = 0;
+        for(uint256 i; i < totalStakedNFTList.length; i++){
+            if(stakedNFTs[totalStakedNFTList[i]].owner == user && stakedNFTs[totalStakedNFTList[i]].isStaked == true){
+                stakedNFTList[j++] = totalStakedNFTList[i];
+            }
+        }
+        return stakedNFTList;
     }
     
-
-    //function to cancel NFT stake
-    function unStake(uint256[] memory stakingId) public  {
-        uint256 totalAmount;
-        for (uint256 i = 0; i < stakingId.length; i++) {
-            Staking storage staking = _StakedItem[stakingId[i]];
-            require(staking.staker == msg.sender,"You cannot cancel this staking as it is not listed under this address");
-            require(staking.status == StakingStatus.Active,"Staking is either not active (Cancalled or in claiming process)");
-            
-            totalAmount += rate * (block.timestamp - staking.releaseTime) / 25 days;
-            staking.status = StakingStatus.Cancelled;
-            IERC721(staking.token).transferFrom(address(this), msg.sender, staking.tokenId);
-            emit tokenCancelComplete(staking.token, staking.tokenId, staking.status, staking.StakingId);
+    function getTotalrewards(address user) public view returns(uint256){
+        uint256[] memory stakedNFTList = getStakedNFTList(user);
+        uint256 len = getStakedNFTCount(user);
+        uint256 totalRewards = 0;
+        for(uint256 i = 0; i < len; i++){
+            totalRewards = totalRewards.add(calculateRewardsNFT(stakedNFTList[i]));
         }
+        return totalRewards;
     }
 
-    function withdraw(uint256 amount) public onlyAdmin {
-        uint256 balance = IERC20(REWARDToken).balanceOf(address(this));
-        require(balance >= amount, "The balance of this contract is less than the amount");
-        IERC20(REWARDToken).transfer(msg.sender, amount);
-    }
-    //function to set reward rate per day
-    function setRewardRate(uint256 newRate) external onlyAdmin {
-        rate = newRate;
+    function getLevel(uint256 _tokenID) public view returns (uint256){
+        return stakedNFTs[_tokenID].level;
     }
 
-    function getRewardRate() external view returns (uint256) {
-        return rate;
+    function getTotalBurn() public view returns (uint256){
+        return burnToken;
     }
-
-    function getTotalStaked() external view returns (uint256) {
-        return _stakingId;
-    }
-    modifier onlyAdmin{
-        require(admin == msg.sender, "OA");
-        _;
-    }
-
-    function setNewAdmin(address newAdd) external onlyAdmin{
-        admin = newAdd;
-    }
-
 }

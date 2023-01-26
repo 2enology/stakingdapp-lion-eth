@@ -8,15 +8,14 @@ import Staking from "./pages/staking";
 import Unstaking from "./pages/unstaking";
 
 import { motion } from "framer-motion";
-import { ClassicSpinner } from "react-spinners-kit";
 import { NotificationContainer } from "react-notifications";
 import "./App.css";
 function App() {
-  const [preloadState, setPreloadState] = useState(true);
+  // const [preloadState, setPreloadState] = useState(true);
 
-  setInterval(() => {
-    setPreloadState(false);
-  }, 3000);
+  // setInterval(() => {
+  //   setPreloadState(false);
+  // }, 3000);
 
   return (
     <motion.section
