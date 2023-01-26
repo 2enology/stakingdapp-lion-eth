@@ -180,7 +180,7 @@ export default function Unstaking() {
                   {stakedNftArray} Lions
                 </h1>
               </div>{" "}
-              <div className="border-custom border-opacity-20 px-2 py-4 sm:border-r-2 sm:px-8 text-center w-1/3">
+              <div className="border-custom border-opacity-20 lg:border-r-2 px-2 py-4 sm:border-lg-2 sm:px-8 text-center w-1/3">
                 <h1 className="lg:text-left text-center text-gray-500 text-sm">
                   Total Lions
                 </h1>
@@ -200,7 +200,7 @@ export default function Unstaking() {
               </div>{" "}
               <div className="border-custom border-opacity-20 px-2 py-4 sm:border-r-2 text-center w-1/3">
                 <h1 className="lg:text-left text-center text-gray-500 text-sm">
-                  My TSP
+                  My TSP Balance
                 </h1>
                 <h1 className="lg:text-left md:text-2xl text-center text-white text-xs">
                   {myBalanceOf} TSP

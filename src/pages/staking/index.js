@@ -103,8 +103,8 @@ export default function Staking() {
       for (let i = 0; i < stakedNfts.length; i++) {
         nftIDArray[i] = stakedNfts[i].tokenId;
       }
-      await StakingContract.unStake(nftIDArray, { gasLimit: 300000 }).then(
-        (tx) => {
+      await StakingContract.unStake(nftIDArray, { gasLimit: 300000 })
+        .then((tx) => {
           tx.wait()
             .then(async () => {
               setFuncRunState(false);
@@ -118,8 +118,10 @@ export default function Staking() {
               setFuncRunState(false);
               setStakedState(false);
             });
-        }
-      );
+        })
+        .catch(() => {
+          setFuncRunState(false);
+        });
     }
   };
 
@@ -141,6 +143,7 @@ export default function Staking() {
             setFuncRunState(false);
             getStakedNfts();
             getMydata();
+            NotificationManager.success("Claimed successfully!");
           });
         })
         .catch(() => {
@@ -174,7 +177,7 @@ export default function Staking() {
                   {unStakedNftArray} Lions
                 </h1>
               </div>{" "}
-              <div className="border-custom border-opacity-20 px-2 py-4 sm:border-r-2 sm:px-8 text-center w-1/3">
+              <div className="border-custom border-opacity-20 lg:border-r-2 px-2 py-4 sm:px-8 text-center w-1/3">
                 <h1 className="lg:text-left text-center text-gray-500 text-sm">
                   Total Lions
                 </h1>
