@@ -78,7 +78,7 @@ export default function DashBoard() {
             <div className="grid grid-cols-2 lg:w-2/3">
               <div className="border-b-2 border-custom border-r-2 w-full">
                 <h1 className="ml-2 mt-3 sm:ml-14 sm:mt-14 sm:text-2xl text-indigo-500 text-left">
-                  Staked Lions
+                  Hunting
                 </h1>
                 <h1 className="ml-2 sm:ml-14 sm:text-4xl text-left text-lg text-white">
                   <CountUp start={0} end={stakedNftArray} duration={3} /> Lions
@@ -86,7 +86,7 @@ export default function DashBoard() {
               </div>
               <div className="border-b-2 border-custom w-full">
                 <h1 className="ml-2 mt-3 sm:ml-14 sm:mt-14 sm:text-2xl text-indigo-500 text-left">
-                  Unstaked Lions
+                  At home
                 </h1>
                 <h1 className="ml-2 sm:ml-14 sm:text-4xl text-left text-lg text-white">
                   <CountUp start={0} end={unStakedNftArray} duration={3} />{" "}
