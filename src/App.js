@@ -1,5 +1,4 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { useState } from "react";
 import AppHeader from "./component/header";
 import AppFooter from "./component/footer";
 import Topbar from "./component/topbar";
