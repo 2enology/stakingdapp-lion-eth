@@ -1,6 +1,5 @@
 import { BsTwitter } from "react-icons/bs";
 import { SiDiscord } from "react-icons/si";
-import { TfiLinkedin } from "react-icons/tfi";
 
 import logoIMG from "../../assets/images/logoIMG.png";
 

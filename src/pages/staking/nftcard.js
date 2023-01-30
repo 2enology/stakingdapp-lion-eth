@@ -1,9 +1,6 @@
 import { useState } from "react";
 
-import {
-  NotificationContainer,
-  NotificationManager,
-} from "react-notifications";
+import { NotificationManager } from "react-notifications";
 
 import NFTCONTRACT_ABI from "../../assets/abis/NFTCONTRACT_ABI.json";
 import STAKINGCONTRACT_ABI from "../../assets/abis/STAKINGCONTRACT_ABI.json";
