@@ -20,14 +20,17 @@ export default function Footer() {
       </h1>
 
       <div className="flex gap-5 m-5">
-        <a href="https://twitter.com" target="_blank" rel="noreferrer">
+        <a
+          href="https://twitter.com/thesgbpride"
+          target="_blank"
+          rel="noreferrer">
           <BsTwitter className="cursor-pointer duration-200 hover:text-green-500 text-2xl text-white" />
         </a>
-        <a href="https://discord.com" target="_blank" rel="noreferrer">
+        <a
+          href="https://discord.gg/kaTqPtgCt9"
+          target="_blank"
+          rel="noreferrer">
           <SiDiscord className="cursor-pointer duration-200 hover:text-green-500 text-2xl text-white" />
-        </a>
-        <a href="https://linkedin.com" target="_blank" rel="noreferrer">
-          <TfiLinkedin className="cursor-pointer duration-200 hover:text-green-500 text-2xl text-white" />
         </a>
       </div>
     </footer>
