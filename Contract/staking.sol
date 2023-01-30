@@ -441,4 +441,4 @@ contract StakeNFT {
     function getTotalBurn() public view returns (uint256){
         return burnToken;
     }
-}
+}  
