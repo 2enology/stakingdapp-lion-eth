@@ -7,7 +7,7 @@ import { useWeb3React } from "@web3-react/core";
 import STAKINGCONTRACT_ABI from "../../assets/abis/STAKINGCONTRACT_ABI.json";
 import NFTCONTRACT_ABI from "../../assets/abis/NFTCONTRACT_ABI.json";
 
-import NftCard from "./nftcard";
+import NftCard from "../NftCard";
 import config from "../../config/config";
 
 const ethers = require("ethers");
