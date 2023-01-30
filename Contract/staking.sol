@@ -284,21 +284,21 @@ contract StakeNFT {
         nftCollection = _sNFT;
         rewardsToken = _sToken;
 
-        rewardsPerday[0] = 1 ether;
-        rewardsPerday[1] = 2 ether;
-        rewardsPerday[2] = 3 ether;
-        rewardsPerday[3] = 4 ether;
-        rewardsPerday[4] = 5 ether;
+        rewardsPerday[0] = 20000 ether;
+        // rewardsPerday[1] = 2 ether;
+        // rewardsPerday[2] = 3 ether;
+        // rewardsPerday[3] = 4 ether;
+        // rewardsPerday[4] = 5 ether;
 
-        upgradeLevelBurnAmount[0] = 12 ether;
-        upgradeLevelBurnAmount[1] = 13 ether;
-        upgradeLevelBurnAmount[2] = 14 ether;
-        upgradeLevelBurnAmount[3] = 15 ether;
+        // upgradeLevelBurnAmount[0] = 12 ether;
+        // upgradeLevelBurnAmount[1] = 13 ether;
+        // upgradeLevelBurnAmount[2] = 14 ether;
+        // upgradeLevelBurnAmount[3] = 15 ether;
 
-        upgradeLevelMaxBurnAmount[0] = 20 ether;
-        upgradeLevelMaxBurnAmount[1] = 18 ether;
-        upgradeLevelMaxBurnAmount[2] = 16 ether;
-        upgradeLevelMaxBurnAmount[3] = 13 ether;
+        // upgradeLevelMaxBurnAmount[0] = 20 ether;
+        // upgradeLevelMaxBurnAmount[1] = 18 ether;
+        // upgradeLevelMaxBurnAmount[2] = 16 ether;
+        // upgradeLevelMaxBurnAmount[3] = 13 ether;
 
     }
 
