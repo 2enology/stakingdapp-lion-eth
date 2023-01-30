@@ -7,7 +7,7 @@ import "react-notifications/lib/notifications.css";
 
 import { useWeb3React } from "@web3-react/core";
 import config from "../../config/config";
-import NftCard from "../staking/nftcard";
+import NftCard from "../NftCard";
 
 import NFTCONTRACT_ABI from "../../assets/abis/NFTCONTRACT_ABI.json";
 import STAKINGCONTRACT_ABI from "../../assets/abis/STAKINGCONTRACT_ABI.json";
